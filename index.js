@@ -5,6 +5,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const authRouter = require("./router/authRouter");
+const { error, log } = require("console");
 
 const PORT = process.env.PORT || 8000;
 
@@ -18,7 +19,17 @@ app.use(cors());
 
 app.use("/api", authRouter);
 
-const server = http.createServer(app);
-server.listen(PORT, () => {
-  console.log(`Server is running ${PORT}`);
-});
+mongoose
+  .connect(
+    "mongodb+srv://sohel:sohel@mern-state.ier4ijb.mongodb.net/?retryWrites=true&w=majority&appName=mern-state"
+  )
+  .then(() => {
+    const server = http.createServer(app);
+    server.listen(PORT, () => {
+      console.log(`Server is running ${PORT}`);
+      console.log("Database connect");
+    });
+  })
+  .catch((error) => {
+    console.log("Database connect failed", error);
+  });
